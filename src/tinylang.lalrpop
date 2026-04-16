@@ -16,7 +16,7 @@ SemiStatement: Statement = {
     <s:Statement> ";" => s,
 };
 
-Statement: Statement = {    <stmts:SemiStatement*> => stmts,
+Statement: Statement = { 
     "puts" <e:Expr> => Statement::Puts(e),
     <name:Ident> "=" <e:Expr> => Statement::Assign(name, e),
     "if" <cond:Expr> "then" <body:SemiStatement+> "end" =>

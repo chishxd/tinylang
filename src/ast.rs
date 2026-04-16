@@ -1,15 +1,15 @@
 #[derive(Clone)]
 pub enum Expr {
-	Number(f64),
-    StringLateral(String),
+    Number(f64),
+    StringLiteral(String),
     Bool(bool),
     Variable(String),
     BinOp(Box<Expr>, Op, Box<Expr>),
-    Call(String, Vec<Expr>)
+    Call(String, Vec<Expr>),
 }
 
 #[derive(Clone)]
-pub enum Op{
+pub enum Op {
     Add,
     Sub,
     Mul,
@@ -20,12 +20,12 @@ pub enum Op{
 }
 
 #[derive(Clone)]
-pub enum Statement{
+pub enum Statement {
     Puts(Expr),
     Assign(String, Expr),
     If(Expr, Vec<Statement>, Option<Vec<Statement>>),
     While(Expr, Vec<Statement>),
     Def(String, Vec<String>, Vec<Statement>),
     Return(Expr),
-    ExprStatement(Expr)
+    ExprStatement(Expr),
 }
