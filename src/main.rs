@@ -1,52 +1,46 @@
 pub mod ast;
 pub mod interpreter;
 
+use std::{fs, path::PathBuf};
+
 use lalrpop_util::lalrpop_mod;
+use clap::{Parser};
+
 lalrpop_mod!(
     #[allow(clippy::ptr_arg)]
     #[rustfmt::skip]
     tinylang
 );
 
+#[derive(Parser, Debug)]
+struct Args{
+    #[arg(short, long)]
+    file: PathBuf
+}
+
 use interpreter::Interpreter;
 
 fn main() {
-    let source = r#"
-def greet(name)
-    puts "Hello, " + name + "!";
-end;
+    let args = Args::parse();
 
-greet("world");
+    let is_tl = args
+    .file
+    .extension()
+    .and_then(|e| e.to_str())
+    .is_some_and(|e| e.eq_ignore_ascii_case("tl"));
 
-x = 10;
-y = 3;
-puts x + y;
+    if !is_tl {
+        eprintln!("Expected a .tl file, got: {}", args.file.display());
+        std::process::exit(2);
+    }
 
-def factorial(n)
-    if n < 2 then
-        return 1;
-    end;
-    return n * factorial(n - 1);
-end;
-
-result = factorial(5);
-puts result;
-
-i = 1;
-while i < 6 do
-    puts i;
-    i = i + 1;
-end;
-
-if 10 > 5 then
-    puts "ten is greater";
-else
-    puts "this won't print";
-end;
-"#;
+    let source = fs::read_to_string(&args.file).unwrap_or_else(|e| {
+       eprintln!("Failed to read {}: {e}", args.file.display());
+       std::process::exit(1); 
+    } );
 
     let parser = tinylang::ProgramParser::new();
-    let program = parser.parse(source).unwrap_or_else(|e| {
+    let program = parser.parse(&source).unwrap_or_else(|e| {
         eprintln!("Parse error: {e}");
         std::process::exit(1);
     });
