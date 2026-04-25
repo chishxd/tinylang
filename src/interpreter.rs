@@ -1,5 +1,5 @@
-use std::{collections::HashMap, fs};
-use crate::ast::{Expr, Op, Statement};
+use std::{collections::HashMap};
+use crate::{ast::{Expr, Op, Statement}};
 
 #[derive(Clone, Debug)]
 pub enum Value {
@@ -34,21 +34,6 @@ struct Function {
 pub struct Interpreter {
     variables: HashMap<String, Value>,
     functions: HashMap<String, Function>,
-}
-
-pub enum BuiltIn{
-    ReadFile,
-    WriteFile,
-}
-
-impl BuiltIn {
-    fn from_name(name: &str) -> Option<BuiltIn>{
-        match name {
-            "read_file" => Some(Self::ReadFile),
-            "write_file" => Some(Self::WriteFile),
-            _ => None
-        }
-    }
 }
 
 impl Interpreter {
@@ -174,29 +159,12 @@ impl Interpreter {
         }
     }
 
-    fn read_file(&self, file: &str) -> Result<Value, String> {
-        let contents = fs::read_to_string(file)
-        .map_err(|e| format!("Failed to read file {file}: {e}"))?;
-
-        Ok(Value::StringVal(contents))
-    }
+    // fn write_file(&self, file: &str, path: PathBuf){}
 
     fn call_function(&mut self, name: &str, args: Vec<Value>) -> Result<Value, String> {
 
-        if let Some(builtin) = BuiltIn::from_name(name)  {
-            match builtin {
-                BuiltIn::ReadFile => if args.len() == 1 {
-                    return match &args[0] {
-                        Value::StringVal(path) => self.read_file(&path),
-                        _ => Err("read_file expects String path".to_string())
-                    }
-                } else {
-                    return Err("read_file expects 1 argument".to_string())
-                },
-                BuiltIn::WriteFile => if args.len() == 2 {
-                    // TODO
-                },         
-            }
+        if let Some(value) = crate::builtin::call_builtin(name, &args)?  {
+            return Ok(value);
         }
 
 

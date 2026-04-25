@@ -1,5 +1,6 @@
 pub mod ast;
 pub mod interpreter;
+pub mod builtin;
 
 use std::{fs, path::PathBuf};
 
