@@ -33,3 +33,21 @@ end;
 puts "======================";
 
 puts fetch("http://example.com");
+
+
+puts " ";
+puts " ";
+puts " ";
+puts "=========================";
+
+yell "HACK CLUB RULES";
+
+craft fire_fire()
+    i = 67;
+    while i < 69 do
+        yell "WHO LET THE DOG OUT";
+        i = i + 1;
+    end;
+end;
+
+fire_fire();

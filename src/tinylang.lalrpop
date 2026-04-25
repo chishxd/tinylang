@@ -18,6 +18,7 @@ SemiStatement: Statement = {
 
 Statement: Statement = { 
     "puts" <e:Expr> => Statement::Puts(e),
+    "yell" <e:Expr> => Statement::Puts(e),
     <name:Ident> "=" <e:Expr> => Statement::Assign(name, e),
     "if" <cond:Expr> "then" <body:SemiStatement+> "end" =>
         Statement::If(cond, body, None),
@@ -26,6 +27,8 @@ Statement: Statement = {
     "while" <cond:Expr> "do" <body:SemiStatement+> "end" =>
         Statement::While(cond, body),
     "def" <name:Ident> "(" <params:Comma<Ident>> ")" <body:SemiStatement+> "end" =>
+        Statement::Def(name, params, body),
+    "craft" <name:Ident> "(" <params:Comma<Ident>> ")" <body:SemiStatement+> "end" =>
         Statement::Def(name, params, body),
     "return" <e:Expr> => Statement::Return(e),
     <e:Expr> => Statement::ExprStatement(e),
@@ -73,5 +76,10 @@ Comma<T>: Vec<T> = {
 };
 
 Num: f64 = <s:r"[0-9]+(\.[0-9]+)?"> => s.parse().unwrap();
-StringLit: String = <s:r#""[^"]*""#> => s[1..s.len()-1].to_string();
+DQString: String = <s:r#""[^"]*""#> => s[1..s.len()-1].to_string();
+SQString: String = <s:r#"'[^']*'"#> => s[1..s.len()-1].to_string();
+StringLit: String = {
+    <s:DQString> => s,
+    <s:SQString> => s,
+}
 Ident: String = <s:r"[a-zA-Z_][a-zA-Z0-9_]*"> => s.to_string();
