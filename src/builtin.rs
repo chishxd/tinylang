@@ -14,9 +14,12 @@ pub fn call_builtin(name: &str, args: &[Value]) -> Result<Option<Value>, String>
                 let path = expect_str_arg("read_file", args, 0)?;
                 Ok(Some(read_file(path.as_str())?))
             },
-            // "write_file" => {
-                // TODO: Would start doing in a minute
-            // },
+            "write_file" => {
+                expect_arity("write_file", args.len(), 2)?;
+                let path = expect_str_arg("write_file", args, 0)?;
+                let contents = expect_str_arg("write_file", args, 1)?;
+                Ok(Some(write_file(path.as_str(), contents.as_str())?))
+            },
             _ => Ok(None)
         }
 }
@@ -47,3 +50,8 @@ fn read_file(file: &str) -> Result<Value, String> {
     Ok(Value::StringVal(contents))
 }
 
+fn write_file(path: &str, contents: &str) -> Result<Value, String> {
+    fs::write(path, contents).map_err(|e| format!("Failed to write {path}: {e}"))?;
+
+    Ok(Value::Nil)
+}

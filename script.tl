@@ -29,3 +29,9 @@ if 10 > 5 then
 else
     puts "this won't print";
 end;
+
+puts "======================";
+
+puts read_file("random.txt");
+
+puts write_file("a.txt", "hello");
