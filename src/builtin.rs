@@ -20,6 +20,11 @@ pub fn call_builtin(name: &str, args: &[Value]) -> Result<Option<Value>, String>
                 let contents = expect_str_arg("write_file", args, 1)?;
                 Ok(Some(write_file(path.as_str(), contents.as_str())?))
             },
+            "fetch" => {
+                expect_arity("fetch", args.len(), 1)?;
+                let url = expect_str_arg("fetch", args, 0)?;
+                Ok(Some(fetch(url.as_str())?))
+            }
             _ => Ok(None)
         }
 }
@@ -54,4 +59,18 @@ fn write_file(path: &str, contents: &str) -> Result<Value, String> {
     fs::write(path, contents).map_err(|e| format!("Failed to write {path}: {e}"))?;
 
     Ok(Value::Nil)
+}
+
+fn fetch(url: &str) -> Result<Value, String> {
+    let mut response = ureq::get(url)
+    .header("User-Agent", "tinylang/0.67")
+    .call()
+    .map_err(|e| format!("Failed to send request: {e}"))?;
+
+    let body = response
+    .body_mut()
+    .read_to_string()
+    .map_err(|e| format!("Failed to read response body: {e}"))?;
+
+    Ok(Value::StringVal(body))
 }

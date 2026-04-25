@@ -32,6 +32,4 @@ end;
 
 puts "======================";
 
-puts read_file("random.txt");
-
-puts write_file("a.txt", "hello");
+puts fetch("http://example.com");
