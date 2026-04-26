@@ -4,6 +4,30 @@ A Simple ruby-like language written in Rust.
 
 Built for Rust pathway in Resolution YSWS by Hack Club.
 
+## Getting Started
+
+### Installation
+
+Download the binary from [Releases](../../releases) or build from source:
+
+```bash
+cargo build --release
+./target/release/tinylang --file script.tl
+```
+
+## Quick Example
+```
+yell "Hello, TinyLang!";
+x = 42;
+yell x;
+
+craft greet(name) 
+  yell name;
+end;
+
+greet("World");
+```
+
 ## Stack Used
 - Rust
 - LALRPOP
