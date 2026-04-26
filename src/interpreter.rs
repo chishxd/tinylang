@@ -20,7 +20,7 @@ impl std::fmt::Display for Value {
                 }
             }
             Value::StringVal(s) => write!(f, "{s}"),
-            Value::Bool(b) => write!(f, "{b}"),
+            Value::Bool(b) => write!(f, "{}", if *b {"nocap"} else {"cap"}),
             Value::Nil => write!(f, "nil"),
         }
     }

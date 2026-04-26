@@ -51,3 +51,11 @@ craft fire_fire()
 end;
 
 fire_fire();
+
+puts 2 > 6;
+
+if cap then
+    yell "never gonna give you up";
+else
+    yell "never gonna let you down";
+end;
