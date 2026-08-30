@@ -711,7 +711,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tinylang"
+name = "tinylang-chishxd"
 version = "0.1.0"
 dependencies = [
  "clap",
